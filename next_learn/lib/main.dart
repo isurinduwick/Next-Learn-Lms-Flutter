@@ -9,7 +9,9 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  final ThemeController themeController = Get.put(ThemeController());
+  late final ThemeController themeController = Get.put(ThemeController());
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {

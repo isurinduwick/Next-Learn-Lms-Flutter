@@ -6,7 +6,9 @@ import 'package:next_learn/models/onboarding_model.dart';
 
 class OnboardingScreen extends StatelessWidget {
   final OnboardingController controller = Get.put(OnboardingController());
-  final ThemeController themeController = Get.find<ThemeController>(); // Get theme controller
+  final ThemeController themeController = Get.find<ThemeController>();
+
+  OnboardingScreen({super.key}); // Get theme controller
 
   @override
   Widget build(BuildContext context) {

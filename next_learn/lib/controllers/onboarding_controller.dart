@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_learn/views/welcome_screen.dart';
 import '../models/onboarding_model.dart';
-import '../views/auth/login_screen.dart';
+//import '../screens/welcome_screen.dart'; // Import WelcomeScreen
 
 class OnboardingController extends GetxController {
   final PageController pageController = PageController();
@@ -14,7 +15,7 @@ class OnboardingController extends GetxController {
         curve: Curves.ease,
       );
     } else {
-      Get.to(LoginScreen());
+      Get.off(() => WelcomeScreen()); // Navigate to WelcomeScreen
     }
   }
 
