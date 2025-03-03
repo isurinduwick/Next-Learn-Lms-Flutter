@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_learn/views/splash_screen.dart';
 import 'controllers/theme_controller.dart';
 import 'views/onboarding/onboarding_screen.dart';
 
@@ -19,7 +20,8 @@ class MyApp extends StatelessWidget {
           themeMode: themeController.isDarkMode.value
               ? ThemeMode.dark
               : ThemeMode.light,
-          home: OnboardingScreen(),
+          home: SplashScreen(),
+
         ));
   }
 }
