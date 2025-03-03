@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:next_learn/views/splash_screen.dart';
 import 'controllers/theme_controller.dart';
-import 'views/onboarding/onboarding_screen.dart';
+//import 'views/onboarding/onboarding_screen.dart';
 
 void main() {
   runApp(MyApp());

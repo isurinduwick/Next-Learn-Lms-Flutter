@@ -7,6 +7,8 @@ import 'auth/login_screen.dart';
 class WelcomeScreen extends StatelessWidget {
   final ThemeController themeController = Get.find<ThemeController>();
 
+  WelcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Obx(() {
