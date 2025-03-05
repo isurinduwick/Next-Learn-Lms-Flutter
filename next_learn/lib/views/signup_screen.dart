@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:next_learn/views/signup_screen.dart';
-//import 'signup_screen.dart';
+import 'package:next_learn/views/auth/login_screen.dart';
+//import 'package:next_learn/views/welcome_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
+class SignUpScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,41 +26,55 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 50), // Space from top
+              const SizedBox(height: 50),
 
               // Back Button
               IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Get.back(),
               ),
-              const SizedBox(height: 20),
+
+              const SizedBox(height: 10),
 
               // Title
-              const Center(
-                child: Text(
-                  "Sign in",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                ),
+              const Text(
+                "Sign Up",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
-              const Center(
-                child: Text(
-                  "Please Sign in with your account",
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
-                ),
+
+              const SizedBox(height: 5),
+
+              const Text(
+                "Create an account to begin your Learning Journey",
+                style: TextStyle(fontSize: 16, color: Colors.black54),
               ),
+
               const SizedBox(height: 30),
 
+              // Full Name Field
+              const Text("Full Name"),
+              const SizedBox(height: 6),
+              TextField(
+                controller: fullNameController,
+                decoration: InputDecoration(
+                  hintText: "Your Name Here",
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
               // Email Field
-              const Text("Email Here"),
+              const Text("Email"),
               const SizedBox(height: 6),
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
+                  hintText: "Your Email Here",
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  hintText: "Enter your email",
                 ),
               ),
+
               const SizedBox(height: 16),
 
               // Password Field
@@ -69,8 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passwordController,
                 obscureText: !isPasswordVisible,
                 decoration: InputDecoration(
+                  hintText: "********************",
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  hintText: "Enter your password",
                   suffixIcon: IconButton(
                     icon: Icon(
                       isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -83,19 +98,34 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
 
-              // Forget Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: () {},
-                  child: const Text("Forget Password?", style: TextStyle(color: Colors.black54)),
+              const SizedBox(height: 16),
+
+              // Confirm Password Field
+              const Text("Confirm Password"),
+              const SizedBox(height: 6),
+              TextField(
+                controller: confirmPasswordController,
+                obscureText: !isConfirmPasswordVisible,
+                decoration: InputDecoration(
+                  hintText: "********************",
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        isConfirmPasswordVisible = !isConfirmPasswordVisible;
+                      });
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
 
-              // Sign In Button
+              const SizedBox(height: 30),
+
+              // Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -103,15 +133,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {
-                    // Handle sign-in logic
-                  },
+                  onPressed: () {},
                   child: const Text(
-                    "SIGN IN",
+                    "SIGN UP",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
 
               // OR Divider
@@ -120,14 +149,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   Expanded(child: Divider(thickness: 1)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text("Or Sign in with"),
+                    child: Text("Or Sign Up with"),
                   ),
                   Expanded(child: Divider(thickness: 1)),
                 ],
               ),
+
               const SizedBox(height: 20),
 
-              // Facebook Sign In
+              // Facebook Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -136,18 +166,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.white),
-                  onPressed: () {
-                    // Handle Facebook sign-in
-                  },
+                  onPressed: () {},
                   label: const Text(
-                    "Sign In with Facebook",
+                    "Sign Up with Facebook",
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
               ),
+
               const SizedBox(height: 12),
 
-              // Google Sign In
+              // Google Sign Up Button
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -155,27 +184,26 @@ class _LoginScreenState extends State<LoginScreen> {
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
                   icon: const FaIcon(FontAwesomeIcons.google, color: Colors.black),
-                  onPressed: () {
-                    // Handle Google sign-in
-                  },
+                  onPressed: () {},
                   label: const Text(
-                    "Sign In with Google",
+                    "Sign Up with Google",
                     style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ),
               ),
+
               const SizedBox(height: 30),
 
-              // Sign Up Link
+              // Sign In Link
               Center(
                 child: GestureDetector(
-                  onTap: () => Get.to(() => SignUpScreen()), // Navigate to Sign Up
+                  onTap: () => Get.to(() => LoginScreen()),
                   child: const Text.rich(
                     TextSpan(
-                      text: "Didn’t have an account? ",
+                      text: "Already have an account? ",
                       children: [
                         TextSpan(
-                          text: "Sign up Here",
+                          text: "Sign in Here",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
@@ -183,6 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
             ],
           ),

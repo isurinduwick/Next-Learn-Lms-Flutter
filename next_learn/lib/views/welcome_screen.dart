@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:next_learn/views/signup_screen.dart';
 import '../controllers/theme_controller.dart';
 import 'auth/login_screen.dart';
 //import 'auth/signup_screen.dart';
@@ -89,7 +90,7 @@ class WelcomeScreen extends StatelessWidget {
                               side: BorderSide(color: isDarkMode ? Colors.white : Colors.black),
                             ),
                             onPressed: () {
-                              Get.to(()); // Navigate to Sign Up
+                              Get.to(SignUpScreen()); // Navigate to Sign Up
                             },
                             child: Text(
                               "Sign Up",
