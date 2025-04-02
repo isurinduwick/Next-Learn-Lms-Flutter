@@ -1,43 +1,73 @@
-#  NextLearn - Modern LMS
+# NextLearn - LMS
 
-NextLearn is an innovative Learning Management System (LMS) built using Flutter. This ongoing project aims to provide a seamless learning experience for students and educators by integrating modern features for course management, content delivery, and interactive learning.
+![NextLearn](https://github.com/isurinduwick/Next-Learn-Lms-Flutter/blob/main/next_learn/assets/Untitled%20design%20(2).png)
 
-##  Project Status
-**Ongoing Development** - Actively being improved with new features and enhancements.
+NextLearn is a modern Learning Management System (LMS) built using Flutter. It provides an interactive platform for students and teachers to manage courses, assignments, and learning materials efficiently.
 
-##  Features (Planned & Implemented)
-- 🔹 **User Authentication** (Firebase / Custom API)
-- 🔹 **Course Management** - Create, edit, and manage courses
-- 🔹 **Video & Document Support** - Upload and view course materials
-- 🔹 **Quizzes & Assessments** - Track student progress
-- 🔹 **Discussion Forums** - Interactive learning with Q&A
-- 🔹 **Progress Tracking** - Monitor learning analytics
-- 🔹 **Dark Mode Support**
-- 🔹 **Cross-platform Compatibility** (Android & iOS)
+## 📌 Table of Contents
+- [Features](#-features)
+- [Installation](#-installation)
+- [Technologies Used](#-technologies-used)
+- [Screenshots](#-screenshots)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-##  Tech Stack
-- **Flutter** - Cross-platform app development
-- **Dart** - Programming language
-- **Firebase / REST API** - Backend integration
-- **Hive / SQLite** - Local database for offline mode
-- **Provider / Riverpod** - State management
+## 🎓 Features
+✅ User authentication for students and teachers.  
+✅ Course creation and management.  
+✅ Assignment submission and grading system.  
+✅ Interactive discussion forums.  
+✅ Responsive design with smooth UI/UX.<br>
+✅ Course Management - Create, edit, and manage courses<br>
+✅ Quizzes & Assessments - Track student progress<br>
+✅ Discussion Forums - Interactive learning with Q&A<br>
+✅ Progress Tracking - Monitor learning analytics<br>
+✅ Dark Mode Support<br>
 
-##  Installation & Setup
-1. Clone the repository:
-   ```sh
+## 🛠️ Installation
+To run this project locally, follow these steps:
+
+1️⃣ Clone the repository:
+   ```bash
    git clone https://github.com/isurinduwick/Next-Learn-Lms-Flutter.git
    ```
-2. Navigate to the project directory:
-   ```sh
+2️⃣ Navigate to the project folder:
+   ```bash
    cd Next-Learn-Lms-Flutter
    ```
-3. Install dependencies:
-   ```sh
+3️⃣ Install dependencies:
+   ```bash
    flutter pub get
    ```
-4. Run the app:
-   ```sh
+4️⃣ Run the app:
+   ```bash
    flutter run
    ```
+
+## 🏗️ Technologies Used
+- Flutter
+- Firebase (Authentication, Firestore, Storage)
+- REST APIs
+- Provider for state management
+- Google Sign-In
+
+
+
+## 🤝 Contributing
+Contributions are welcome! If you'd like to improve this project:
+- Fork the repository.
+- Create a new branch (`git checkout -b feature-branch`).
+- Commit your changes (`git commit -m 'Add some feature'`).
+- Push to the branch (`git push origin feature-branch`).
+- Open a Pull Request.
+
+## 📜 License
+This project is licensed under the MIT License.
+
+---
+Developed with ❤️ by [Isurindu Wickramasinghe](https://github.com/isurinduwick)
+
+
+
 
 
