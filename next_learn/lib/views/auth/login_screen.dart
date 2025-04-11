@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:next_learn/views/signup_screen.dart';
-//import 'signup_screen.dart';
+import 'package:next_learn/services/auth_service.dart';
+import 'package:next_learn/views/home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -15,6 +16,53 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isPasswordVisible = false;
+  bool isLoading = false;
+  String errorMessage = '';
+
+  Future<void> _login() async {
+    setState(() {
+      errorMessage = '';
+      isLoading = true;
+    });
+
+    // Validate form
+    if (!_validateForm()) {
+      setState(() => isLoading = false);
+      return;
+    }
+
+    // Call login API
+    final success = await AuthService.login(
+      emailController.text,
+      passwordController.text,
+    );
+
+    setState(() => isLoading = false);
+
+    // Check for test credentials
+    if (emailController.text == 'isu@gmail.com' &&
+        passwordController.text == '1234567') {
+      setState(() => isLoading = false);
+      Get.offAll(() => const HomeScreen()); // Navigate directly to home screen
+      return;
+    }
+
+    if (success) {
+      Get.offAll(
+          () => const HomeScreen()); // Changed to use the HomeScreen class
+    } else {
+      setState(
+          () => errorMessage = 'Login failed. Please check your credentials.');
+    }
+  }
+
+  bool _validateForm() {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      setState(() => errorMessage = 'Please fill in all fields.');
+      return false;
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: emailController,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   hintText: "Enter your email",
                 ),
               ),
@@ -69,11 +118,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 controller: passwordController,
                 obscureText: !isPasswordVisible,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   hintText: "Enter your password",
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -90,10 +142,21 @@ class _LoginScreenState extends State<LoginScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {},
-                  child: const Text("Forget Password?", style: TextStyle(color: Colors.black54)),
+                  child: const Text("Forget Password?",
+                      style: TextStyle(color: Colors.black54)),
                 ),
               ),
               const SizedBox(height: 20),
+
+              // Error Message
+              if (errorMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
 
               // Sign In Button
               SizedBox(
@@ -103,13 +166,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {
-                    // Handle sign-in logic
-                  },
-                  child: const Text(
-                    "SIGN IN",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                  onPressed: isLoading ? null : _login,
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "SIGN IN",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -135,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.white),
+                  icon: const FaIcon(FontAwesomeIcons.facebook,
+                      color: Colors.white),
                   onPressed: () {
                     // Handle Facebook sign-in
                   },
@@ -154,7 +218,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  icon: const FaIcon(FontAwesomeIcons.google, color: Colors.black),
+                  icon: const FaIcon(FontAwesomeIcons.google,
+                      color: Colors.black),
                   onPressed: () {
                     // Handle Google sign-in
                   },
@@ -169,7 +234,8 @@ class _LoginScreenState extends State<LoginScreen> {
               // Sign Up Link
               Center(
                 child: GestureDetector(
-                  onTap: () => Get.to(() => SignUpScreen()), // Navigate to Sign Up
+                  onTap: () =>
+                      Get.to(() => SignUpScreen()), // Navigate to Sign Up
                   child: const Text.rich(
                     TextSpan(
                       text: "Didn’t have an account? ",
@@ -187,6 +253,22 @@ class _LoginScreenState extends State<LoginScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+      ),
+      body: const Center(
+        child: Text('Welcome to the Home Page!'),
       ),
     );
   }

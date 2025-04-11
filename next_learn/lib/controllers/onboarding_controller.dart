@@ -19,6 +19,11 @@ class OnboardingController extends GetxController {
     }
   }
 
+  // New method to skip directly to welcome screen
+  void skipToWelcomeScreen() {
+    Get.off(() => WelcomeScreen()); // Navigate directly to WelcomeScreen
+  }
+
   void updateIndex(int index) {
     currentIndex.value = index;
   }

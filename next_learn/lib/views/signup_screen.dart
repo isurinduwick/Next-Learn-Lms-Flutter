@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:next_learn/views/auth/login_screen.dart';
+import 'package:next_learn/services/auth_service.dart';
 //import 'package:next_learn/views/welcome_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -13,9 +16,60 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
+  String selectedRole = 'student'; // Default role
+  bool isLoading = false;
+  String errorMessage = '';
+
+  Future<void> _signUp() async {
+    setState(() {
+      errorMessage = '';
+      isLoading = true;
+    });
+
+    // Validate form
+    if (!_validateForm()) {
+      setState(() => isLoading = false);
+      return;
+    }
+
+    // Call register API
+    final success = await AuthService.register(
+      fullNameController.text,
+      emailController.text,
+      passwordController.text,
+      selectedRole,
+    );
+
+    setState(() => isLoading = false);
+
+    if (success) {
+      Get.offAll(() => const LoginScreen());
+      Get.snackbar('Success', 'Registration successful! Please login.');
+    } else {
+      setState(() => errorMessage = 'Registration failed. Please try again.');
+    }
+  }
+
+  bool _validateForm() {
+    if (fullNameController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
+      setState(() => errorMessage = 'Please fill in all fields.');
+      return false;
+    }
+
+    if (passwordController.text != confirmPasswordController.text) {
+      setState(() => errorMessage = 'Passwords do not match.');
+      return false;
+    }
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +112,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: fullNameController,
                 decoration: InputDecoration(
                   hintText: "Your Name Here",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                 ),
               ),
 
@@ -71,7 +126,44 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 controller: emailController,
                 decoration: InputDecoration(
                   hintText: "Your Email Here",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Role Selection
+              const Text("Select Role"),
+              const SizedBox(height: 6),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: DropdownButton<String>(
+                    value: selectedRole,
+                    isExpanded: true,
+                    underline: Container(), // Remove the default underline
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedRole = newValue!;
+                      });
+                    },
+                    items: <String>['student', 'lecturer']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value.capitalize!, // Capitalize the first letter
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
 
@@ -85,10 +177,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: !isPasswordVisible,
                 decoration: InputDecoration(
                   hintText: "********************",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -109,10 +204,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 obscureText: !isConfirmPasswordVisible,
                 decoration: InputDecoration(
                   hintText: "********************",
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8)),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      isConfirmPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                     ),
                     onPressed: () {
                       setState(() {
@@ -123,7 +221,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 20),
+
+              // Error Message
+              if (errorMessage.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    errorMessage,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+
+              const SizedBox(height: 10),
 
               // Sign Up Button
               SizedBox(
@@ -133,11 +243,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  onPressed: () {},
-                  child: const Text(
-                    "SIGN UP",
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
+                  onPressed: isLoading ? null : _signUp,
+                  child: isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "SIGN UP",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
                 ),
               ),
 
@@ -165,7 +277,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     backgroundColor: Colors.black,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  icon: const FaIcon(FontAwesomeIcons.facebook, color: Colors.white),
+                  icon: const FaIcon(FontAwesomeIcons.facebook,
+                      color: Colors.white),
                   onPressed: () {},
                   label: const Text(
                     "Sign Up with Facebook",
@@ -183,7 +296,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
-                  icon: const FaIcon(FontAwesomeIcons.google, color: Colors.black),
+                  icon: const FaIcon(FontAwesomeIcons.google,
+                      color: Colors.black),
                   onPressed: () {},
                   label: const Text(
                     "Sign Up with Google",
