@@ -21,6 +21,9 @@ class AuthService {
     String password,
     String role,
   ) async {
+    // Store the user role
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('user_role', role);
     // Always return success for now
     return true;
   }
@@ -33,5 +36,16 @@ class AuthService {
   static Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('token');
+  }
+
+  static Future<String> getUserRole() async {
+    final prefs = await SharedPreferences.getInstance();
+    // If we have a stored user, get the role from there
+    if (prefs.containsKey('user')) {
+      final userData = jsonDecode(prefs.getString('user')!);
+      return userData['role'] ?? 'student';
+    }
+    // Otherwise get it from the dedicated key
+    return prefs.getString('user_role') ?? 'student';
   }
 }

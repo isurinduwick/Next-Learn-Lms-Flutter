@@ -4,6 +4,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:next_learn/views/signup_screen.dart';
 import 'package:next_learn/services/auth_service.dart';
 import 'package:next_learn/views/home/home_screen.dart';
+import 'package:next_learn/views/home/lecturer_dashboard.dart';
+import 'package:next_learn/views/home/student_dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isPasswordVisible = false;
   bool isLoading = false;
   String errorMessage = '';
+  String selectedRole = 'student'; // Default role
 
   Future<void> _login() async {
     setState(() {
@@ -43,13 +46,23 @@ class _LoginScreenState extends State<LoginScreen> {
     if (emailController.text == 'isu@gmail.com' &&
         passwordController.text == '1234567') {
       setState(() => isLoading = false);
-      Get.offAll(() => const HomeScreen()); // Navigate directly to home screen
+      // Route to appropriate dashboard based on selected role
+      if (selectedRole == 'lecturer') {
+        Get.offAll(() => const LecturerDashboard());
+      } else {
+        Get.offAll(() => const StudentDashboard());
+      }
       return;
     }
 
     if (success) {
-      Get.offAll(
-          () => const HomeScreen()); // Changed to use the HomeScreen class
+      // Route to appropriate dashboard based on stored role
+      final userRole = await AuthService.getUserRole();
+      if (userRole == 'lecturer') {
+        Get.offAll(() => const LecturerDashboard());
+      } else {
+        Get.offAll(() => const StudentDashboard());
+      }
     } else {
       setState(
           () => errorMessage = 'Login failed. Please check your credentials.');
@@ -107,6 +120,41 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8)),
                   hintText: "Enter your email",
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Role Selection
+              const Text("Select Role"),
+              const SizedBox(height: 6),
+              Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: DropdownButton<String>(
+                    value: selectedRole,
+                    isExpanded: true,
+                    underline: Container(), // Remove the default underline
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedRole = newValue!;
+                      });
+                    },
+                    items: <String>['student', 'lecturer']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value.capitalize!, // Capitalize the first letter
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
               const SizedBox(height: 16),
